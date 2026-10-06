@@ -28,11 +28,13 @@ class Tensor {
      
     this->strides = stride;
 }
+    std::vector<std::size_t>& get_shape();
     const std::vector<std::size_t>& get_shape() const;
     const std::vector<float>& get_data() const;
     std::vector<float>& get_data();
     std::vector<std::size_t> get_strides() const;
     float& at(const std::vector<std::size_t>& coordinates);
+    const float& at(const std::vector<std::size_t>& coordinates) const;
     void fill(float value);
     
 };

@@ -1,6 +1,10 @@
 #include "../include/tensor.h"
 #include <stdexcept>
 
+std::vector<std::size_t>& Tensor::get_shape(){
+    return shape;
+}
+
 const std::vector<std::size_t>& Tensor::get_shape() const {
     return shape;
 }
@@ -34,6 +38,26 @@ float& Tensor::at(const std::vector<std::size_t>& coordinates){
     return data[index];
 }
 
+const float& Tensor::at(const std::vector<std::size_t>& coordinates) const {
+
+    if (coordinates.size() != shape.size()) {
+        throw std::runtime_error("Invalid Number of Coordinates");
+    }
+
+    for (std::size_t i = 0; i < shape.size(); i++) {
+        if (coordinates[i] >= shape[i]) {
+            throw std::runtime_error("Coordinates are out of bound");
+        }
+    }
+
+    std::size_t index = 0;
+
+    for (std::size_t i = 0; i < shape.size(); i++) {
+        index += coordinates[i] * strides[i];
+    }
+
+    return data[index];
+}
 
 void Tensor::fill(float value){
     for(float& val : data){
