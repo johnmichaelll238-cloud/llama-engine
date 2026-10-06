@@ -85,21 +85,21 @@ int main() {
     std::vector<float>& A_data = A.get_data();
     std::vector<float>& B_data = B.get_data();
 
-    A_data = {
+    A_data.assign({
         1.0f, 2.0f, 3.0f,
         4.0f, 5.0f, 6.0f
-    };
+    });
 
-    B_data = {
+    B_data.assign({
          7.0f,  8.0f,
          9.0f, 10.0f,
         11.0f, 12.0f
-    };
+    });
 
     Tensor C = matmul(A, B);
 
     const std::vector<std::size_t> expected_C_shape{2, 2};
-    assert(C.get_shape() == expected_C_shape);
+    assert((C.get_shape() == expected_C_shape));
     const std::vector<float>& C_data = C.get_data();
 
     assert(C_data[0] == 58.0f);
@@ -145,7 +145,7 @@ int main() {
     Tensor C_batch = matmul(A_batch, B_batch);
     
     const std::vector<std::size_t> expected_C_batch_shape{2, 3, 5};
-    assert(C_batch.get_shape() == expected_C_batch_shape);
+    assert((C_batch.get_shape() == expected_C_batch_shape));
     
     const std::vector<float>& C_batch_data = C_batch.get_data();
     
@@ -216,7 +216,7 @@ B_shared_data = {
 Tensor C_shared = matmul(A_shared, B_shared);
 
 std::vector<std::size_t> expected_shared_shape = {2, 2, 2};
-assert(C_shared.get_shape() == expected_shared_shape);
+assert((C_shared.get_shape() == expected_shared_shape));
 
 const std::vector<float>& C_shared_data = C_shared.get_data();
 
