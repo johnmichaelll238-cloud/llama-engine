@@ -167,6 +167,16 @@ Tensor matmul(const Tensor& A, const Tensor& B) {
     return C;
 }
 
+Tensor relu(const Tensor& input){
+    Tensor output = input;
+    std::vector<float>& data = output.get_data();
+    for(std::size_t i = 0; i < data.size(); i++){
+        if(data[i] < 0){
+            data[i] = 0;
+        }
+    }
+    return output;
+}
 
         
 

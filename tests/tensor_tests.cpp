@@ -228,9 +228,60 @@ assert(C_shared_data[3] == 64.0f);
 
 // Batch 1
 assert(C_shared_data[4] == 76.0f);
-assert(C_shared_data[5] == 88.0f);
+assert(C_shared_data[5] == 100.0f);
 assert(C_shared_data[6] == 103.0f);
-assert(C_shared_data[7] == 124.0f);
+assert(C_shared_data[7] == 136.0f);
+
+
+
+// Test 1: Mixed positive, negative, and zero values
+Tensor input({5});
+input.get_data() = {-2.0f, 0.0f, 3.0f, -4.0f, 5.0f};
+
+Tensor output = relu(input);
+
+std::vector<float> expected = {0.0f, 0.0f, 3.0f, 0.0f, 5.0f};
+
+assert(output.get_data() == expected);
+
+// Test 2: Input must remain unchanged
+std::vector<float> original = {-2.0f, 0.0f, 3.0f, -4.0f, 5.0f};
+
+assert(input.get_data() == original);
+
+// Test 3: Output must preserve the input shape
+assert(output.get_shape() == input.get_shape());
+
+// Test 4: ReLU must work on rank-three tensors
+Tensor input3d({2, 2, 2});
+input3d.get_data() = {
+    -1.0f, 2.0f,
+     3.0f, -4.0f,
+     5.0f, -6.0f,
+     0.0f, 7.0f
+};
+
+Tensor output3d = relu(input3d);
+
+std::vector<float> expected3d = {
+    0.0f, 2.0f,
+    3.0f, 0.0f,
+    5.0f, 0.0f,
+    0.0f, 7.0f
+};
+
+assert(output3d.get_data() == expected3d);
+assert(output3d.get_shape() == input3d.get_shape());
+
+// Test 5: Original rank-three tensor remains unchanged
+assert(input3d.get_data() == std::vector<float>({
+    -1.0f, 2.0f,
+     3.0f, -4.0f,
+     5.0f, -6.0f,
+     0.0f, 7.0f
+}));
+
+
     
 return 0;
 }
