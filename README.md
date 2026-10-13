@@ -18,8 +18,8 @@ works at a low level by implementing the core components ourselves.
 
 ## Planned
 
-- [ ] Element-wise multiplication
-- [ ] Matrix multiplication
+- [x] Element-wise multiplication
+- [x] Matrix multiplication
 - [ ] Softmax
 - [ ] Reshape / transpose
 - [ ] Normalization
