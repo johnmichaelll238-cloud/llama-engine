@@ -178,5 +178,36 @@ Tensor relu(const Tensor& input){
     return output;
 }
 
-        
+Tensor add_bias(const Tensor& input, const Tensor& bias){  
+    std::vector<std::size_t> input_shape = input.get_shape();
+    const std::vector<float>& input_data = input.get_data();
+    std::vector<std::size_t> bias_shape = bias.get_shape();
+    const std::vector<float>& bias_data = bias.get_data();
+    //parameter validation:
+    if(input_shape.size() != 2){
+    throw std::runtime_error("Initial vector is not the right rank - [Not rank 2]");
+    }
+     if(bias_shape.size() != 1){
+    throw std::runtime_error("Bias tensor is not the right rank");
+    }
+    if(input_shape[1] != bias_shape[0]){
+    throw std::runtime_error("Incompatible tensor shapes for bias addition");
+    }
+    //Create candidate result Tensor:
+    
+    Tensor result(input_shape);
+    std::vector<float>& rdata = result.get_data();
+    
+    //Commence bias addition:
+    std::size_t i = 0;
+    while(i < input_data.size()){
+      for(std::size_t j = 0; j < bias_data.size(); j++){
+       rdata[i] = input_data[i] + bias_data[j];
+       i++;
+    }
+    
+    }
+    
+    return result;
+    }       
 

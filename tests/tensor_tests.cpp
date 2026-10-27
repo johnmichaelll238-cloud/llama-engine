@@ -188,8 +188,7 @@ int main() {
     assert(C_batch_data[29] == 2950.0f);
     
         
-
-       // Tests batched A with rank-2 B
+ // Tests batched A with rank-2 B
 
 Tensor A_shared({2, 2, 3});
 Tensor B_shared({3, 2});
@@ -282,6 +281,96 @@ assert(input3d.get_data() == std::vector<float>({
 }));
 
 
+// Test 1: Normal bias addition
+Tensor input_biastest({2, 3});
+input_biastest.get_data() = {1, 2, 3, 4, 5, 6};
+
+Tensor bias({3});
+bias.get_data() = {10, 20, 30};
+
+Tensor output_biastest = add_bias(input_biastest, bias);
+
+assert(output_biastest.get_shape() == std::vector<std::size_t>({2, 3}));
+assert(output_biastest.get_data() == std::vector<float>({
+    11, 22, 33,
+    14, 25, 36
+}));
+
+// Test 2: Inputs must remain unchanged
+assert(input_biastest.get_data() == std::vector<float>({
+    1, 2, 3, 4, 5, 6
+}));
+
+assert(bias.get_data() == std::vector<float>({
+    10, 20, 30
+}));
+
+// Test 3: Different input dimensions
+Tensor input2_biastest({3, 2});
+input2_biastest.get_data() = {1, 2, 3, 4, 5, 6};
+
+Tensor bias2({2});
+bias2.get_data() = {10, 20};
+
+Tensor output2_biastest = add_bias(input2_biastest, bias2);
+
+assert(output2_biastest.get_shape() == std::vector<std::size_t>({3, 2}));
+assert(output2_biastest.get_data() == std::vector<float>({
+    11, 22,
+    13, 24,
+    15, 26
+}));
+
+// Test 4: Reject rank-one input
+bool caught_exception = false;
+
+try {
+    Tensor invalid_input({3});
+    invalid_input.get_data() = {1, 2, 3};
+
+    Tensor valid_bias({3});
+    valid_bias.get_data() = {10, 20, 30};
+
+    add_bias(invalid_input, valid_bias);
+} catch (const std::runtime_error&) {
+    caught_exception = true;
+}
+
+assert(caught_exception);
+
+// Test 5: Reject rank-two bias
+caught_exception = false;
+
+try {
+    Tensor valid_input({2, 3});
+    valid_input.get_data() = {1, 2, 3, 4, 5, 6};
+
+    Tensor invalid_bias({1, 3});
+    invalid_bias.get_data() = {10, 20, 30};
+
+    add_bias(valid_input, invalid_bias);
+} catch (const std::runtime_error&) {
+    caught_exception = true;
+}
+
+assert(caught_exception);
+
+// Test 6: Reject incompatible dimensions
+caught_exception = false;
+
+try {
+    Tensor valid_input({2, 3});
+    valid_input.get_data() = {1, 2, 3, 4, 5, 6};
+
+    Tensor invalid_bias({2});
+    invalid_bias.get_data() = {10, 20};
+
+    add_bias(valid_input, invalid_bias);
+} catch (const std::runtime_error&) {
+    caught_exception = true;
+}
+
+assert(caught_exception);
     
 return 0;
 }
