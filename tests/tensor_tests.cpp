@@ -321,26 +321,8 @@ assert(output2_biastest.get_data() == std::vector<float>({
     15, 26
 }));
 
-// Test 4: Reject rank-one input
+// Test 4: Reject rank-two bias
 bool caught_exception = false;
-
-try {
-    Tensor invalid_input({3});
-    invalid_input.get_data() = {1, 2, 3};
-
-    Tensor valid_bias({3});
-    valid_bias.get_data() = {10, 20, 30};
-
-    add_bias(invalid_input, valid_bias);
-} catch (const std::runtime_error&) {
-    caught_exception = true;
-}
-
-assert(caught_exception);
-
-// Test 5: Reject rank-two bias
-caught_exception = false;
-
 try {
     Tensor valid_input({2, 3});
     valid_input.get_data() = {1, 2, 3, 4, 5, 6};
@@ -355,7 +337,7 @@ try {
 
 assert(caught_exception);
 
-// Test 6: Reject incompatible dimensions
+// Test 5: Reject incompatible dimensions
 caught_exception = false;
 
 try {
@@ -372,5 +354,7 @@ try {
 
 assert(caught_exception);
     
+
+
 return 0;
 }

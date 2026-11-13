@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -9,8 +11,9 @@ class Tensor {
     std::vector<std::size_t> strides;
     
     public:
-    Tensor(const std::vector<std::size_t>& shape){
-        this->shape = shape;
+    Tensor(const std::vector<std::size_t>& shape)
+     : shape(shape)
+    {
         std::size_t product = 1;
         for (std::size_t i = 0; i < shape.size(); i++) {
             product *= shape[i];

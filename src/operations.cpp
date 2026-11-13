@@ -184,13 +184,13 @@ Tensor add_bias(const Tensor& input, const Tensor& bias){
     std::vector<std::size_t> bias_shape = bias.get_shape();
     const std::vector<float>& bias_data = bias.get_data();
     //parameter validation:
-    if(input_shape.size() != 2){
-    throw std::runtime_error("Initial vector is not the right rank - [Not rank 2]");
+    if(input_shape.size() < 1){
+    throw std::runtime_error("Initial vector is not the right rank - [Not rank 1 or greater]");
     }
      if(bias_shape.size() != 1){
     throw std::runtime_error("Bias tensor is not the right rank");
     }
-    if(input_shape[1] != bias_shape[0]){
+    if(input_shape.back() != bias_shape[0]){
     throw std::runtime_error("Incompatible tensor shapes for bias addition");
     }
     //Create candidate result Tensor:
