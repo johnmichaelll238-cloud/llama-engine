@@ -104,6 +104,46 @@ void iterate(
     }
 }
 
+Tensor vector_matrix(const Tensor& A, const Tensor& B){
+
+    //valiation of operand shapes
+    
+    const std::vector<std::size_t>& A_shape = A.get_shape();
+    const std::vector<std::size_t>& B_shape = B.get_shape();
+    if(A_shape.size() != 1){
+     throw std::invalid_argument("First operand does not have shape or dimensionality of '1'");
+    }
+    if(B_shape.size() != 2){
+    throw std::invalid_argument("Second operand does not have shape or dimensionality of '2'");
+    }
+    
+    //validation of shape compatiility
+    
+    if(A_shape[0] != B_shape[0]){
+     throw std::invalid_argument("Shapes are incompatible, no 'k' to sum over");
+    }
+    
+    //create empty Tensor that will be given as the return value
+    std::vector<std::size_t> result_shape = {B_shape[1]};
+    Tensor result(result_shape);
+    result.fill(0.0f);
+    
+    // write loop for cumulating elements in the result Tensor over shared dimension "K"
+    std::size_t k = A_shape[0];
+    std::size_t N = B_shape[1];
+    
+    for(std::size_t i = 0; i < k; i++){
+       for(std::size_t j = 0; j < N; j++){
+          result.at({j}) += A.at({i}) * B.at({i, j});
+    }
+    }
+    
+    //return result Tensor
+    
+    return result;
+    }
+    
+
 Tensor matmul(const Tensor& A, const Tensor& B) {
 
     const std::vector<std::size_t>& A_shape = A.get_shape();

@@ -19,6 +19,7 @@ class Tensor {
             product *= shape[i];
     }
     data.resize(product);
+    if(shape.size() > 1){
     
     size_t N = shape.size() - 1;
     std::vector<std::size_t> stride(shape.size());
@@ -30,6 +31,10 @@ class Tensor {
     }
      
     this->strides = stride;
+}
+    else{
+    strides.push_back(1);
+}
 }
     std::vector<std::size_t>& get_shape();
     const std::vector<std::size_t>& get_shape() const;
