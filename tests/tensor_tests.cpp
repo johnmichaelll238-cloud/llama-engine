@@ -354,7 +354,48 @@ try {
 
 assert(caught_exception);
     
+// Test vector-matrix multiplication
+Tensor A_vector_matrix({3});
+Tensor B_vector_matrix({3, 2});
 
+A_vector_matrix.get_data() = {1.0f, 2.0f, 3.0f};
+B_vector_matrix.get_data() = {
+    1.0f, 2.0f,
+    3.0f, 4.0f,
+    5.0f, 6.0f
+};
+
+Tensor C_vector_matrix = matmul(A_vector_matrix, B_vector_matrix);
+
+// Verify output shape
+assert(C_vector_matrix.get_shape() == std::vector<std::size_t>{2});
+
+// Verify output values
+assert(C_vector_matrix.at({0}) == 22.0f);
+assert(C_vector_matrix.at({1}) == 28.0f);
+
+// Verify input immutability
+assert(A_vector_matrix.get_data() == std::vector<float>({1.0f, 2.0f, 3.0f}));
+assert(B_vector_matrix.get_data() == std::vector<float>({
+    1.0f, 2.0f,
+    3.0f, 4.0f,
+    5.0f, 6.0f
+}));
+
+// Test incompatible vector-matrix dimensions
+Tensor X_vector_matrix_invalid({3});
+Tensor Y_vector_matrix_invalid({4, 2});
+
+bool threw_vector_matrix_invalid = false;
+
+try {
+    matmul(X_vector_matrix_invalid, Y_vector_matrix_invalid);
+}
+catch (const std::invalid_argument&) {
+    threw_vector_matrix_invalid = true;
+}
+
+assert(threw_vector_matrix_invalid);
 
 return 0;
 }

@@ -148,6 +148,11 @@ Tensor matmul(const Tensor& A, const Tensor& B) {
 
     const std::vector<std::size_t>& A_shape = A.get_shape();
     const std::vector<std::size_t>& B_shape = B.get_shape();
+    
+    if(A_shape.size() == 1 && B_shape.size() == 2){
+        return vector_matrix(A, B);
+  
+    }    
 
     if (A_shape.size() < 2 || B_shape.size() < 2) {
         throw std::runtime_error(
